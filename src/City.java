@@ -23,6 +23,7 @@ public class City {
         this.connections = new ArrayList<>();
     }
 
+    
     public String getName() {
         return name;
     }
@@ -90,6 +91,8 @@ public class City {
         }
         return null;
     }
+
+    
 
     public String toString() {
         return name + " " + latitude + " " + longitude;

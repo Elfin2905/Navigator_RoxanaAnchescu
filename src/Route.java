@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Route {
@@ -75,18 +76,42 @@ public class Route {
     public static Route getShortestRoute(City start,City destination) {
         List<Route> allPossibleRoutes = new ArrayList<>();
         Route inizialRoute = new Route();
-        inizialRoute.appendCity(start, null);  
+        inizialRoute.appendCity(start, null); //Aufruf der Methode 
         addAllRoutes(allPossibleRoutes, inizialRoute, destination);
-        Route shortestRoute = null;
+
+        //Sortiere allPossibleRoutes nach der Distanz
+        Collections.sort(allPossibleRoutes, (route1, route2) -> {
+            return Double.compare(route1.getTotalDistance(), route2.getTotalDistance());
+        });
+
+        //Erstellen einer leeeren Liste für die sortierten Routen
+        List<Route> routesOrderedByDistance = new ArrayList<>();
+
+        //for Schleife zum durchlaufen aller möglichen Routen
         for (Route route : allPossibleRoutes) {
-            if (shortestRoute == null || route.getTotalDistance() < shortestRoute.getTotalDistance()) {
-                shortestRoute = route;
+            addRouteInOrder(routesOrderedByDistance, route);
+        }
+        return routesOrderedByDistance.get(0);
+
+    }
+
+    private static void addRouteInOrder(List<Route> routes, Route newRoute) {
+        int index = 0;
+        // Durchlaufen der sortierten Liste, um die Position für die neue Route zu finden
+        for (int i = 0; i < routes.size(); i++) {
+            if (newRoute.getTotalDistance() < routes.get(i).getTotalDistance()) {
+                index = i;
+                break;
+            } else {
+                index = i + 1;
             }
         }
-        return shortestRoute;
+        // Hinzufügen der neuen Route an der gefundenen Position
+        routes.add(index, newRoute);
     }
 
     //Methode Hinzufügen aller möglichen Routen
+
     private static void addAllRoutes(List<Route> allPossibleRoutes, Route currentRoute, City destination) {
         City currentCity = currentRoute.getLastCity();
         if (currentCity.equals(destination)) {
@@ -99,6 +124,7 @@ public class Route {
             City nextCity = nextConnection.getOtherCity(currentCity);
             if (!currentRoute.containsCity(nextCity)) {
                 Route continuedRoute = new Route(currentRoute);
+                continuedRoute.appendCity(nextCity, nextConnection);
                 addAllRoutes(allPossibleRoutes, continuedRoute, nextCity, destination, nextConnection);
             }
         }  
