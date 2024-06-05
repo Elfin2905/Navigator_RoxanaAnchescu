@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Connection {
     private City city1;
     private City city2;
@@ -49,6 +51,15 @@ public class Connection {
     private double degreesToRadians(double degrees) {
         return degrees * Math.PI / 180;
     }
+
+    public static void printConnections(List<City> cities, List<Connection> connections) {
+    for (City city : cities) {
+        System.out.println(city.getName() + " (" + city.getLatitude() + ", " + city.getLongitude() + ")");
+        for (Connection connection : connections) {
+            System.out.println(connection.getCity1().getName() + " - " + connection.getCity2().getName() + ": " + connection.getDistanceInKm() + " km");
+        }
+    }
+}
 
     //Die Methode getOtherCity gibt die andere Stadt in der Verbindung zurück.
     // Sie überprüft, welche der beiden Städte mit der übergebenen Stadt übereinstimmt und gibt die andere Stadt zurück.

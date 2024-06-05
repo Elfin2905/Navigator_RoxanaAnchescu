@@ -1,4 +1,6 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class App {
@@ -50,8 +52,8 @@ public class App {
          System.out.println("Distance between Nürnberg and Ulm: " + connection12.getDistanceInKm() + " km");
 
 
-
-        List<Connection> connections = new ArrayList<>();
+        List<City> cities = Arrays.asList(ingolstadt, muenchen, nuernberg, ulm, stuttgart, augsburg, regensburg, wuerzburg);
+        List<Connection> connections = new ArrayList<>(Arrays.asList(connection1, connection2, connection3, connection4, connection5, connection6, connection7, connection8, connection9, connection10, connection11, connection12));
         connections.add(new Connection(ingolstadt, muenchen));
         connections.add(new Connection(ingolstadt, nuernberg));
         connections.add(new Connection(ingolstadt, regensburg));
@@ -68,16 +70,32 @@ public class App {
         printConnections(connections);
   }
 
+
     public static void printConnections(List<Connection> connections) {
         for (Connection connection : connections) {
             System.out.println(connection.getCity1().getName() + " - " + connection.getCity2().getName() + ": " + connection.calculateDistance(connection.getCity1(), connection.getCity2()) + " km");
         }
-
-         
-          
-
-
     }
+
+    public static void printCities(List<City> cities) {
+        for (City city : cities) {
+            System.out.println(city.getName() + " (" + city.getLatitude() + ", " + city.getLongitude() + ")");
+        }
+    }
+
+    public static void printConnections(List<City> cities, List<Connection> connections) {
+        for (City city : cities) {
+            System.out.println(city.getName() + " (" + city.getLatitude() + ", " + city.getLongitude() + ")");
+            for (Connection connection : connections) {
+                System.out.println(connection.getCity1().getName() + " - " + connection.getCity2().getName() + ": " + connection.getDistanceInKm() + " km");
+            }
+        }
+    }
+
+    City start = new City("Start City");
+    City destination = new City("Destination City");
+    Route shortesRoute = Route.getShortestRoute(start, destination);
+     
 }
 
 
