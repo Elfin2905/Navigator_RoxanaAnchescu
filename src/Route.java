@@ -27,134 +27,96 @@ public class Route {
         }
     }
 
-    public void printConnections() {
-        for (int i = 0; i < routeCities.size() - 1; i++) {
-            City city1 = routeCities.get(i);
-            City city2 = routeCities.get(i + 1);
-            System.out.println("Verbindung von " + city1.getName() + " nach " + city2.getName());
-        }
-    }
-
-    public City getLastCity() {
-        if (!routeCities.isEmpty()) {
-            return routeCities.get(routeCities.size() - 1);
-        } else {
-            return null;
-        }
-    }
-
-    //Check ob die Stadt in der Route enthalten ist
     public boolean containsCity(City city) {
         return this.routeCities.contains(city);
     }
 
-    public City getLasCity() {
+    public City getLastCity() {
+        if (this.routeCities.isEmpty()) {
+            return null;
+        }
         return this.routeCities.get(this.routeCities.size() - 1);
     }
 
-    public double getTotalDistance() {
-        return totalDistance;
+    public City getLastcity() {
+        if (this.routeCities.isEmpty()) {
+            return null;
+        }
+        return this.routeCities.get(this.routeCities.size() - 1);
     }
-
     
-    public ArrayList<City> getRouteCities() {
-        return routeCities;
-    }
-
-    public void setRouteCities(ArrayList<City> routeCities) {
-        this.routeCities = routeCities;
-    }
-
-    public void setTotalDistance(double totalDistance) {
-        this.totalDistance = totalDistance;
+    public City addCity() {
+        return this.routeCities.get(this.routeCities.size() - 1);
     }
 
     public void addCity(City city) {
         this.routeCities.add(city);
     }
     
-        //Erstellen einer leeeren Liste für die sortierten Routen
-        List<Route> routesOrderedByDistance = new ArrayList<>();
-
-        //Erstellen einer Liste für alle möglichen Routen
-        List<Route> allPossibleRoutes = new ArrayList<>();
-       
-        
-    private static void addRouteInOrder(List<Route> routes, Route newRoute) {
-        int index = 0;
-        // Durchlaufen der sortierten Liste, um die Position für die neue Route zu finden
-        for (int i = 0; i < routes.size(); i++) {
-            if (newRoute.getTotalDistance() < routes.get(i).getTotalDistance()) {
-                index = i;
-                break;
-            } else {
-                index = i + 1;
-            }
-        }
-        // Hinzufügen der neuen Route an der gefundenen Position
-        routes.add(index, newRoute);
+    public double getTotalDistance() {
+        return totalDistance;
     }
 
-    //Methode Hinzufügen aller möglichen Routen
-    private static void addAllRoutes(List<Route> allPossibleRoutes, Route currentRoute, City destination) {
-        City currentCity = currentRoute.getLastCity();
-        if (currentCity.equals(destination)) {
-            allPossibleRoutes.add(currentRoute);
-            return;
-        }
-
-        List<Connection> possibleNextCities = currentCity.getConnections();
-        for (Connection nextConnection : possibleNextCities) {
-            City nextCity = nextConnection.getOtherCity(currentCity);
-            if (!currentRoute.containsCity(nextCity)) {
-                Route continuedRoute = new Route(currentRoute);
-                continuedRoute.appendCity(nextCity, nextConnection);
-                addAllRoutes(allPossibleRoutes, continuedRoute, nextCity, destination, nextConnection);
-            }
-        }  
-    }
-
-    private static void addAllRoutes(List<Route> allPossibleRoutes, Route currentRoute, City destination, City nextCity, Connection nextConnection) {
-        currentRoute.appendCity(nextCity, nextConnection); //Füge die Stadt und die Verbindung zur Route hinzu . Wird habe die methode aufgerufen
-        City currentCity = currentRoute.getLastCity();
-        if (currentCity.equals(destination)) {
-            allPossibleRoutes.add(new Route(currentRoute));
-            return;
-        }
-    
-        //Füge alle möglichen Routen hinzu
-        List<Connection> possibleNextCities = currentCity.getConnections();
-        for (Connection nextConnectionInLoop : possibleNextCities) {
-            City nextCityInLoop = nextConnectionInLoop.getOtherCity(currentCity);
-            if (!currentRoute.containsCity(nextCityInLoop)) {
-                Route continuedRoute = new Route(currentRoute);
-                addAllRoutes(allPossibleRoutes, continuedRoute, destination, nextCityInLoop, nextConnectionInLoop);
-            }
-        }
-    }
-
-    public static void printRoute(Route route) {
-        System.out.println("Gesamtdistanz: " + route.getTotalDistance() + " km");
-        for (City city : route.getRouteCities()) {
-            System.out.println(city.getName());
-        }
-    }
-
+    //versuchen ob es mit getCity oder getName funktioniert
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < routeCities.size(); i++){
-            sb.append(routeCities.get(i).getName());
-            if (i < routeCities.size() - 1) {
-                sb.append(" -> ");
+        for (int i = 0; i < this.routeCities.size(); i++) {
+            sb.append(this.routeCities.get(i).getName());
+            if (i < this.routeCities.size() - 1) {
+                sb.append(" - ");
             }
-        }
-        sb.append("; Distanz").append(Math.round(this.totalDistance)).append(" km");
+         }
+        sb.append(" ; Distanz:").append(Math.round(this.totalDistance)).append(" km");
         return sb.toString();
+
+          }
+
+          public static Route getShortestRoute(City start, City destination) {
+            List<Route> allPossibleRoutes = new ArrayList<>();
+            Route inizialRoute = new Route();
+            inizialRoute.appendCity(start, null);
+            addAllPossibleRoutes(allPossibleRoutes, inizialRoute, destination);
+
+            //Sortieren all Possible Routes
+            List<Route> routesOrderByDistance = new ArrayList<>(allPossibleRoutes);
+
+            //Rückgabe der kürzesten Route
+            return routesOrderByDistance.get(0);
+          }
+
+          public static List<Route> insertionSort(List<Route> routes) {
+            for (int i = 1; i < routes.size(); i++) {
+              Route key = routes.get(i);
+              int j = i - 1;
+              while (j >= 0 && routes.get(j).getTotalDistance() > key.getTotalDistance()) {
+                routes.set(j + 1, routes.get(j));
+                j = j - 1;
+              }
+              routes.set(j + 1, key);
+            }
+            return routes;
+          }
+
+          public static void addAllPossibleRoutes(List<Route> allPossibleRoutes, Route currentRoute, City destination) {
+            City currentCity = currentRoute.getLastcity();
+            City nextCity = currentRoute.getLastcity();
+            Route continuedRoute = new Route(currentRoute);
+            if (!currentRoute.containsCity(nextCity)) {
+                Route newRoute = new Route(currentRoute);
+                continuedRoute.appendCity(nextCity, null);
+                addAllPossibleRoutes(allPossibleRoutes, currentRoute, destination);
+                return;
+
+            }
+            List<Connection> possibleNextCitis = new ArrayList<>();
+            for (Connection nextConnection : possibleNextCitis) {
+              if (!currentRoute.containsCity(nextCity)) {
+                Route newRoute = new Route(currentRoute);
+                newRoute.appendCity(nextCity, nextConnection);
+                addAllPossibleRoutes(allPossibleRoutes, continuedRoute, destination);
+              }
+            }
+          }
+        }
         
-    }
-
-    public static Route getShortestrRoute(City start, City destination) {
-
-
-    }
-}
+    
