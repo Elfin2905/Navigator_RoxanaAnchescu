@@ -1,4 +1,4 @@
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +9,7 @@ public class City {
     private double latitude;
     private double longitude;
     private ArrayList<Connection> connections;
-    private List<City> routeCities = new ArrayList<>();
+    List<City> routeCities = new ArrayList<>();
 
     public City(String name, double latitude, double longitude) {
         this.name = name;
@@ -66,7 +66,7 @@ public class City {
         this.connections.add(connection);
         cityToConnect.getConnections().add(connection);
     }
-
+ //Noch mal anscaheuen
     public Route getRouteTo(City destination) {
         Queue<Route> queue = new LinkedList<>();
         Route inizialRoute = new Route(this);
@@ -91,8 +91,6 @@ public class City {
         }
         return null;
     }
-
-    
 
     public String toString() {
         return name + " " + latitude + " " + longitude;

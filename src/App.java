@@ -1,12 +1,6 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        
-        
         City ingolstadt = new City("Ingolstadt", 48.764001378240835, 11.42625484665524);
         City muenchen = new City("München", 48.13891855227781, 11.577266137987793);
         City nuernberg = new City("Nürnberg", 49.45061728516064, 11.076253152617218);
@@ -16,16 +10,16 @@ public class App {
         City regensburg = new City("Regensburg", 49.01662121288669, 12.092787603517024);
         City wuerzburg = new City("Würzburg", 49.79296114327296, 9.945390533206055);
 
-        stuttgart = new City("Stuttgart", 48.77593813959718, 9.17688481609677);
+        
 
-        System.out.println(ingolstadt);
-        System.out.println(muenchen);
-        System.out.println(nuernberg);
-        System.out.println(ulm);
-        System.out.println(stuttgart);
-        System.out.println(augsburg);
-        System.out.println(regensburg);
-        System.out.println(wuerzburg);
+        //System.out.println(ingolstadt);
+        //System.out.println(muenchen);
+        //System.out.println(nuernberg);
+        // System.out.println(ulm);
+        //System.out.println(stuttgart);
+        //System.out.println(augsburg);
+        //System.out.println(regensburg);
+        //System.out.println(wuerzburg);
 
         Connection connection1 = new Connection(ingolstadt, muenchen);
         Connection connection2 = new Connection(ingolstadt, nuernberg);
@@ -41,66 +35,38 @@ public class App {
         Connection connection12 = new Connection(nuernberg, ulm);
 
          // Ausgabe der Distanzen
-         System.out.println("Distance between Ingolstadt and München: " + connection1.getDistanceInKm() + " km");
-         System.out.println("Distance between Ingolstadt and Nürnberg: " + connection2.getDistanceInKm() + " km");
-         System.out.println("Distance between Ingolstadt and Regensburg: " + connection3.getDistanceInKm() + " km");
-         System.out.println("Distance between Ingolstadt and Augsburg: " + connection4.getDistanceInKm() + " km");
-         System.out.println("Distance between München and Augsburg: " + connection5.getDistanceInKm() + " km");
-         System.out.println("Distance between Ulm and Augsburg: " + connection6.getDistanceInKm() + " km");
-         System.out.println("Distance between Stuttgart and Ulm: " + connection7.getDistanceInKm() + " km");
-         System.out.println("Distance between Stuttgart and Nürnberg: " + connection8.getDistanceInKm() + " km");
-         System.out.println("Distance between Stuttgart and Würzburg: " + connection9.getDistanceInKm() + " km");
-         System.out.println("Distance between Regensburg and München: " + connection10.getDistanceInKm() + " km");
-         System.out.println("Distance between Regensburg and Nürnberg: " + connection11.getDistanceInKm() + " km");
-         System.out.println("Distance between Nürnberg and Ulm: " + connection12.getDistanceInKm() + " km");
+         //System.out.println("Distance between Ingolstadt and München: " + connection1.getDistanceInKm() + " km");
+         //System.out.println("Distance between Ingolstadt and Nürnberg: " + connection2.getDistanceInKm() + " km");
+         //System.out.println("Distance between Ingolstadt and Regensburg: " + connection3.getDistanceInKm() + " km");
+         //System.out.println("Distance between Ingolstadt and Augsburg: " + connection4.getDistanceInKm() + " km");
+         //System.out.println("Distance between München and Augsburg: " + connection5.getDistanceInKm() + " km");
+         // System.out.println("Distance between Ulm and Augsburg: " + connection6.getDistanceInKm() + " km");
+         //System.out.println("Distance between Stuttgart and Ulm: " + connection7.getDistanceInKm() + " km");
+         //System.out.println("Distance between Stuttgart and Nürnberg: " + connection8.getDistanceInKm() + " km");
+         //System.out.println("Distance between Stuttgart and Würzburg: " + connection9.getDistanceInKm() + " km");
+         //System.out.println("Distance between Regensburg and München: " + connection10.getDistanceInKm() + " km");
+         //System.out.println("Distance between Regensburg and Nürnberg: " + connection11.getDistanceInKm() + " km");
+         //System.out.println("Distance between Nürnberg and Ulm: " + connection12.getDistanceInKm() + " km");
 
 
-        List<City> cities = Arrays.asList(ingolstadt, muenchen, nuernberg, ulm, stuttgart, augsburg, regensburg, wuerzburg);
-        List<Connection> connections = new ArrayList<>(Arrays.asList(connection1, connection2, connection3, connection4, connection5, connection6, connection7, connection8, connection9, connection10, connection11, connection12));
-        connections.add(new Connection(ingolstadt, muenchen));
-        connections.add(new Connection(ingolstadt, nuernberg));
-        connections.add(new Connection(ingolstadt, regensburg));
-        connections.add(new Connection(ingolstadt, augsburg));
-        connections.add(new Connection(muenchen, augsburg));
-        connections.add(new Connection(ulm, augsburg));
-        connections.add(new Connection(stuttgart, ulm));
-        connections.add(new Connection(stuttgart, nuernberg));
-        connections.add(new Connection(stuttgart, wuerzburg));
-        connections.add(new Connection(regensburg, muenchen));
-        connections.add(new Connection(regensburg, nuernberg));
-        connections.add(new Connection(nuernberg, ulm));
+        ingolstadt.addConnection(muenchen);
+        ingolstadt.addConnection(nuernberg);
+        ingolstadt.addConnection(regensburg);
+        ingolstadt.addConnection(augsburg);
+        muenchen.addConnection(augsburg);
+        ulm.addConnection(augsburg);
+        stuttgart.addConnection(ulm);
+        stuttgart.addConnection(nuernberg);
+        stuttgart.addConnection(wuerzburg);
+        regensburg.addConnection(muenchen);
+        regensburg.addConnection(nuernberg);
+        nuernberg.addConnection(ulm);
+
+        System.out.println("Beste Route:"+stuttgart.getRouteTo(regensburg).toString());
+
+
         
-        printConnections(connections);
-  }
-
-
-    public static void printConnections(List<Connection> connections) {
-        for (Connection connection : connections) {
-            System.out.println(connection.getCity1().getName() + " - " + connection.getCity2().getName() + ": " + connection.calculateDistance(connection.getCity1(), connection.getCity2()) + " km");
-        }
-    }
-
-    public static void printCities(List<City> cities) {
-        for (City city : cities) {
-            System.out.println(city.getName() + " (" + city.getLatitude() + ", " + city.getLongitude() + ")");
-        }
-    }
-
-    public static void printConnections(List<City> cities, List<Connection> connections) {
-        for (City city : cities) {
-            System.out.println(city.getName() + " (" + city.getLatitude() + ", " + city.getLongitude() + ")");
-            for (Connection connection : connections) {
-                System.out.println(connection.getCity1().getName() + " - " + connection.getCity2().getName() + ": " + connection.getDistanceInKm() + " km");
-            }
-        }
-    }
-
-    City start = new City("Start City");
-    City destination = new City("Destination City");
-    Route shortesRoute = Route.getShortestRoute(start, destination);
-     
-
-    	
+  }    	
 }
 
 
